@@ -1,0 +1,14 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Agenda | Admin BarberShop do Gui</title>
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="/css/styles.css"><link rel="stylesheet" href="/css/tema.css"><script defer src="/js/common.js"></script><script defer src="/js/admin-extra.js"></script><script defer src="/js/admin.js"></script></head>
+<body class="admin" data-page="agenda"><a class="skip" href="#conteudo">Pular para o conteúdo</a><header class="site"><div class="pole"></div><div class="wrap"><a class="brand" href="/admin/painel.html"><img src="/assets/logo.png" alt="BarberShop do Gui" width="120" height="44"></a>
+<button class="menu-btn" aria-expanded="false" aria-controls="menu">Menu</button><nav class="main" id="menu" aria-label="Administração"></nav></div></header>
+<main id="conteudo" class="wrap"><p class="small muted">Conectado: <span id="quem">…</span></p><h1>Agenda e balcão</h1>
+<div class="card"><div class="row"><div><label for="f-modo">Ver</label><select class="filtro" id="f-modo"><option value="dia">Um dia</option><option value="semana">Semana</option><option value="mes">Do dia até o fim do mês</option></select></div>
+<div><label for="f-data">Data</label><input class="filtro" type="date" id="f-data"></div>
+<div><label for="f-prof">Profissional</label><select class="filtro" id="f-prof"><option value="">Todos</option></select></div>
+<div><label for="f-serv">Serviço</label><select class="filtro" id="f-serv"><option value="">Todos</option></select></div>
+<div><label for="f-status">Status</label><select class="filtro" id="f-status"><option value="">Todos</option><option>SOLICITADO</option><option>CONFIRMADO</option><option>CONCLUIDO</option><option>CANCELADO</option><option>FALTOU</option></select></div></div>
+<p class="barra"><button class="btn small ghost" id="ant">◀ Anterior</button> <button class="btn small ghost" id="hoje">Hoje</button> <button class="btn small ghost" id="prox">Próximo ▶</button> <button class="btn small" id="filtrar">Atualizar</button> <button class="btn small blue" id="novo">➕ Agendar no balcão</button></p>
+<p class="small muted" id="periodo"></p></div>
+<div class="card" id="disp-card" hidden><h3>Profissionais no dia</h3><div id="disp" class="chips"></div></div>
+<div class="card tablewrap"><table><thead><tr><th>Quando</th><th>Serviço / profissional</th><th>Cliente</th><th>Status</th><th>Ações</th></tr></thead><tbody id="corpo"></tbody></table></div></main><footer class="site"><div class="wrap"><span class="small muted">Dados de demonstração são fictícios. Não use dados reais em ambientes de teste.</span></div></footer></body></html>
