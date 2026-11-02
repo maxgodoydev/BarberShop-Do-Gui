@@ -1,0 +1,9 @@
+flowchart LR
+  C[Cliente: navegador] -->|HTML/CSS/JS estático + API REST| A[Spring Boot 4 / Java 21]
+  T[Equipe: proprietário e técnico] -->|sessão + CSRF| A
+  A -->|JDBC| P[(PostgreSQL)]
+  A -->|SMTP ou modo dev| M[E-mail]
+  P -->|views sem dados pessoais| Y[Pipeline Python / Pandas]
+  Y --> O[CSV/Parquet + relatório de qualidade]
+  O --> B[Power BI + DAX]
+  P -->|usuário somente leitura| B

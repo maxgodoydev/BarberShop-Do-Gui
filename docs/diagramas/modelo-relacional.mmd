@@ -1,0 +1,11 @@
+erDiagram
+  servicos ||--o{ agendamentos : "é executado em"
+  profissionais ||--o{ agendamentos : "atende"
+  clientes ||--o{ agendamentos : "solicita"
+  profissionais ||--o{ profissional_servicos : ""
+  servicos ||--o{ profissional_servicos : ""
+  profissionais ||--o{ horarios_atendimento : "janelas semanais"
+  profissionais |o--o{ bloqueios : "férias/folgas (NULL = loja inteira)"
+  clientes ||--o{ tokens_acesso : "link de uso único"
+  usuarios_admin { string papel "PROPRIETARIO | TECNICO" }
+  agendamentos { string status "RESERVA_TEMPORARIA, SOLICITADO, CONFIRMADO, CONCLUIDO, CANCELADO, EXPIRADO" }
