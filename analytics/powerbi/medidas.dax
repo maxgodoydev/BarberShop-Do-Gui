@@ -1,0 +1,66 @@
+// ============================================================
+// Medidas DAX — BarberShop do Gui  (NÃO validadas em Power BI Desktop neste ambiente)
+// Tabelas esperadas: fato_agendamentos_tratado (Fato), dim_servico, dim_profissional, dim_calendario, dim_status
+// Colunas da Fato: agendamento_id, servico_id, profissional_id, data_inicio (data), inicio, status, cancelado_por, hora_inicio, dia_semana_iso
+// Definições de negócio: docs/metricas.md
+// ============================================================
+
+// ---------- Contagens base ----------
+Pedidos =
+CALCULATE ( COUNTROWS ( Fato ), Fato[status] IN { "SOLICITADO", "CONFIRMADO", "CONCLUIDO", "CANCELADO", "FALTOU" } )
+
+Concluidos = CALCULATE ( COUNTROWS ( Fato ), Fato[status] = "CONCLUIDO" )
+
+Cancelados = CALCULATE ( COUNTROWS ( Fato ), Fato[status] = "CANCELADO" )
+
+Faltas = CALCULATE ( COUNTROWS ( Fato ), Fato[status] = "FALTOU" )
+
+Demanda Nao Cancelada =
+CALCULATE ( COUNTROWS ( Fato ), Fato[status] IN { "SOLICITADO", "CONFIRMADO", "CONCLUIDO" } )
+
+Reservas Expiradas = CALCULATE ( COUNTROWS ( Fato ), Fato[status] = "EXPIRADO" )
+
+// ---------- Referência de tempo (use um parâmetro ou NOW() no refresh) ----------
+Agora Referencia = NOW ()
+
+Pedidos Vencidos =
+CALCULATE ( [Pedidos], FILTER ( Fato, Fato[inicio] < [Agora Referencia] ) )
+
+Vencidos Sem Desfecho =
+CALCULATE (
+    COUNTROWS ( Fato ),
+    Fato[status] IN { "SOLICITADO", "CONFIRMADO" },
+    FILTER ( Fato, Fato[inicio] < [Agora Referencia] )
+)
+
+// ---------- Taxas (% como fração; formatar como porcentagem com 1 casa) ----------
+Taxa Cancelamento = DIVIDE ( [Cancelados], [Pedidos] )          // cancelados ÷ pedidos
+
+Taxa Conclusao = DIVIDE ( [Concluidos], [Pedidos Vencidos] )      // concluídos ÷ pedidos já vencidos
+
+Taxa Abandono Reserva = DIVIDE ( [Reservas Expiradas], [Reservas Expiradas] + [Pedidos] )
+
+// ---------- Participação ----------
+Participacao Demanda Servico =
+DIVIDE ( [Demanda Nao Cancelada], CALCULATE ( [Demanda Nao Cancelada], ALL ( dim_servico ) ) )
+
+Participacao Demanda Profissional =
+DIVIDE ( [Demanda Nao Cancelada], CALCULATE ( [Demanda Nao Cancelada], ALL ( dim_profissional ) ) )
+
+// ---------- Tempo ----------
+Pedidos Mes Anterior =
+CALCULATE ( [Pedidos], DATEADD ( dim_calendario[data], -1, MONTH ) )
+
+Variacao Pedidos MoM = DIVIDE ( [Pedidos] - [Pedidos Mes Anterior], [Pedidos Mes Anterior] )
+
+Media Movel 7d Demanda =
+AVERAGEX ( DATESINPERIOD ( dim_calendario[data], MAX ( dim_calendario[data] ), -7, DAY ), [Demanda Nao Cancelada] )
+
+// ---------- Qualidade (a partir de quality_report.csv/json se importado; opcional) ----------
+Cancelamentos Sem Origem =
+CALCULATE ( COUNTROWS ( Fato ), Fato[status] = "CANCELADO", ISBLANK ( Fato[cancelado_por] ) )
+
+// ---------- Preço potencial (ESTIMATIVA, NÃO é receita) ----------
+// Só exiba com o rótulo "Valor de tabela dos pedidos não cancelados (estimativa)".
+Valor Tabela Demanda Estimado =
+CALCULATE ( SUM ( Fato[preco_referencia] ), Fato[status] IN { "SOLICITADO", "CONFIRMADO", "CONCLUIDO" } )

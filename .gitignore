@@ -1,0 +1,23 @@
+# segredos e ambiente
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+# build / IDE
+app/target/
+*.class
+*.log
+.idea/
+.vscode/
+# python
+__pycache__/
+*.pyc
+.venv/
+venv/
+# saídas geradas pelo pipeline (reproduzíveis)
+analytics/output/*
+!analytics/output/.gitkeep
+# dados reais NUNCA no repositório
+dados_reais/
+*.pbix.bak

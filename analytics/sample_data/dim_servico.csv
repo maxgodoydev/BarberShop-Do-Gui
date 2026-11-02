@@ -1,0 +1,14 @@
+servico_id,servico,preco_tabela_atual,duracao_tabela_atual,requer_avaliacao,ilustrativo,ativo
+1,Corte tradicional,40.00,30,false,true,true
+2,Degradê,45.00,40,false,true,true
+3,Corte infantil,35.00,30,false,true,true
+4,Corte na máquina,30.00,20,false,true,true
+5,Barba,25.00,20,false,true,true
+6,Cabelo e barba,60.00,50,false,true,true
+7,Luzes,150.00,120,true,true,true
+8,Platinado ou descoloração,200.00,150,true,true,true
+9,Coloração ou pigmentação,70.00,45,true,true,true
+10,Sobrancelha,15.00,10,false,true,true
+11,Acabamento,15.00,10,false,true,true
+12,Hidratação,35.00,20,false,true,true
+13,Lavagem,15.00,10,false,true,true

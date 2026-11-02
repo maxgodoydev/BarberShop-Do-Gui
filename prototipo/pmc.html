@@ -1,0 +1,29 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>PMC — BarberShop do Gui</title><link rel="icon" href="img/favicon.svg"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Oswald:wght@500;600&display=swap" rel="stylesheet"><link rel="stylesheet" href="css/style.css">
+<style>.pmc{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-top:26px}.col h3{margin:0 0 10px;padding:10px;border-radius:10px;background:var(--coal2);text-align:center;border-bottom:4px solid var(--red)}.col:nth-child(even) h3{border-color:var(--blue)}
+.b{counter-increment:n;background:var(--coal);border:1px solid var(--ln);border-radius:12px;padding:14px 40px 14px 52px;margin-bottom:12px;position:relative;transition:.25s}.b:hover{transform:translateY(-4px);border-color:var(--red);box-shadow:0 10px 24px #000a}
+.b i{position:absolute;left:12px;top:12px;width:30px;height:30px;border-radius:50%;background:var(--red);display:grid;place-items:center;font:600 .95rem Oswald,Impact,sans-serif;font-style:normal}.b:nth-child(odd) i{background:var(--blue)}
+.b h4{margin:0 0 4px;font:500 1rem Oswald,Impact,sans-serif;letter-spacing:.04em;text-transform:uppercase}.b ul{margin:0;padding-left:16px;color:var(--mu);font-size:.88rem}.b em{position:absolute;right:10px;top:8px;font-style:normal}
+.lg{display:flex;gap:14px;flex-wrap:wrap;color:var(--mu);font-size:.9rem;margin-top:10px}@media(max-width:1000px){.pmc{grid-template-columns:1fr}}</style></head><body data-p="pmc">
+<script>document.body.insertAdjacentHTML('afterbegin','<div class="pole"></div>')</script>
+<main class="wrap"><img src="img/logo.png" alt="" style="height:60px"><h2>PMC — Mural do Projeto</h2>
+<div class="lg"><span>🔴🔵 Leia na ordem <b>1 → 13</b>, da esquerda para a direita</span><span>⚠️ Hipóteses a validar com a barbearia</span></div>
+<div class="pmc">
+<div class="col"><h3>❓ Por quê</h3>
+<div class="b"><i>1</i><em>🎯</em><h4>Justificativas</h4><ul><li>Agenda feita por mensagem: conflito e esquecimento</li><li>Sem visão de demanda por serviço</li></ul></div>
+<div class="b"><i>2</i><em>🏁</em><h4>Objetivo</h4><ul><li>Agendamento online simples, sem conflito, até o fim do semestre</li></ul></div>
+<div class="b"><i>3</i><em>💎</em><h4>Benefícios</h4><ul><li>Menos faltas e atrasos</li><li>Agenda organizada</li><li>Dados para decidir</li></ul></div></div>
+<div class="col"><h3>📦 O quê</h3>
+<div class="b"><i>4</i><em>✂️</em><h4>Produto</h4><ul><li>Site multipágina + agendamento em pop-up por etapas</li></ul></div>
+<div class="b"><i>5</i><em>📋</em><h4>Requisitos</h4><ul><li>Serviços múltiplos com limite de tempo</li><li>3 profissionais, agenda semanal</li><li>Produto opcional</li><li>Confirmação por link mágico</li><li>Cancelar até 1 dia antes; bloqueio por falta/atraso 30 min</li></ul></div></div>
+<div class="col"><h3>👥 Quem</h3>
+<div class="b"><i>6</i><em>💈</em><h4>Stakeholders</h4><ul><li>Dono (Gui) e barbeiros</li><li>Clientes</li><li>Professor FATEC</li></ul></div>
+<div class="b"><i>7</i><em>🧑‍💻</em><h4>Equipe</h4><ul><li>Devs DSM · Dados/BI</li><li>Cliente: validação de preços e horários</li></ul></div></div>
+<div class="col"><h3>🛠️ Como</h3>
+<div class="b"><i>8</i><em>💡</em><h4>Premissas</h4><ul><li>Dono fornece preços/fotos reais</li><li>Clientes têm e-mail</li></ul></div>
+<div class="b"><i>9</i><em>🚚</em><h4>Entregas</h4><ul><li>Protótipo navegável</li><li>Java + PostgreSQL</li><li>Painel admin</li><li>Painel de dados</li></ul></div>
+<div class="b"><i>10</i><em>🚧</em><h4>Restrições</h4><ul><li>Prazo acadêmico</li><li>Sem pagamento online</li><li>Fotos exigem autorização</li></ul></div></div>
+<div class="col"><h3>🗓️ Quando</h3>
+<div class="b"><i>11</i><em>⚠️</em><h4>Riscos</h4><ul><li>Preços não confirmados</li><li>E-mail na caixa de spam</li><li>Código ainda sem teste em produção</li></ul></div>
+<div class="b"><i>12</i><em>⏳</em><h4>Linha do tempo</h4><ul><li>Protótipo → validar com o Gui → backend → testes → entrega</li></ul></div>
+<div class="b"><i>13</i><em>💰</em><h4>Custos</h4><ul><li>Horas da equipe</li><li>Hospedagem e e-mail (plano gratuito no início)</li></ul></div></div>
+</div></main></body></html>

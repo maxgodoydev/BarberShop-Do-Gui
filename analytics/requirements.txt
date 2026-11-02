@@ -1,0 +1,5 @@
+pandas>=2.2
+numpy>=1.26
+# Opcionais: fonte PostgreSQL e exportação Parquet
+# psycopg[binary]>=3.1
+# pyarrow>=15

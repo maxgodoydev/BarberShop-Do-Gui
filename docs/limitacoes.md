@@ -1,0 +1,3 @@
+# Limitações, decisões e pendências
+Ver também `testes.md`. **Pendências reais:** (1) compilar e rodar `mvn verify` — nunca executado aqui; (2) executar os SQLs em PostgreSQL real; (3) teste de concorrência real; (4) abrir o front em navegador e testar fluxos; (5) montar o `.pbix` e validar o DAX; (6) credenciais SMTP; (7) dados oficiais (endereço, telefone, horários, preços e durações; o uso das fotos e do logo foi autorizado verbalmente pelo proprietário, convém registrar por escrito); (8) revisão jurídica da política de privacidade; (9) conferir se o nome/papel de cada integrante no README reflete a contribuição real.
+**Fora do escopo:** pagamentos/receita, WhatsApp automático (apenas link configurável), MFA, múltiplas instâncias.
