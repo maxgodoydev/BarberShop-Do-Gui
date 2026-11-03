@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0b0b0c">
+<meta name="description" content="Seu espaço na BarberShop do Gui: dados, agendamentos e produtos, com acesso por link no e-mail, sem senha."><title>Meu espaço | BarberShop do Gui</title><link rel="icon" href="/assets/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="/css/styles.css"><link rel="stylesheet" href="/css/tema.css"><link rel="preload" href="/assets/fonts/oswald-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin>
+<script defer src="/js/common.js"></script><script defer src="/js/consulta.js"></script></head>
+<body><a class="skip" href="#conteudo">Pular para o conteúdo</a>
+<header class="site"><div class="pole"></div><div class="wrap"><a class="brand" href="/" aria-label="BarberShop do Gui, início"><img src="/assets/logo.png" alt="" width="120" height="44"></a>
+<button class="menu-btn" aria-expanded="false" aria-controls="menu">Menu</button>
+<nav class="main" id="menu" aria-label="Principal"><a href="/">Início</a><a href="/servicos.html">Serviços e preços</a><a href="/galeria.html">Galeria</a><a href="/consulta.html">Meu espaço</a><a class="cta" href="/agendar.html">Agendar horário</a></nav></div></header><main id="conteudo"><section class="wrap"><p class="eyebrow">Consulta</p><h1>Meu espaço</h1><div id="msg" class="notice" hidden role="status"></div>
+<div id="pedir" class="card"><p>Aqui não existe senha. Informe seu e-mail e enviaremos um link de acesso de uso único, válido por poucos minutos. Quem acabou de agendar entra pelo link de confirmação do e-mail.</p>
+<form id="form-link" class="stack"><label for="email">E-mail</label><input id="email" name="email" type="email" required maxlength="160" autocomplete="email"><p><button id="btn-link" class="btn" type="submit">Enviar link de acesso</button></p></form>
+<p class="small muted">Em ambiente de desenvolvimento o e-mail não é enviado de verdade; o link aparece apenas no log do servidor.</p></div>
+<div id="area" hidden><div id="perfil" class="card"></div>
+<h2>Próximos agendamentos</h2><div id="prox" class="grid"></div>
+<h2>Histórico</h2><p class="muted small">Serviços e produtos agendados, concluídos e cancelados.</p><div id="hist" class="grid"></div>
+<p><button class="btn ghost" id="sair">Sair</button> <button class="btn danger" id="excluir">Excluir minha conta</button></p></div></section></main><footer class="site"><div class="wrap"><div><strong>BarberShop do Gui</strong><p class="muted small">Projeto acadêmico (FATEC) — sistema de agendamento e indicadores.<br>Preços e horários marcados com * são demonstrativos até validação do proprietário.</p></div>
+<div class="small"><a href="/privacidade.html">Privacidade</a> · <a href="/admin-login.html">Área da equipe</a><p class="muted">© <span id="ano"></span> BarberShop do Gui</p></div></div></footer></body></html>
