@@ -1,6 +1,5 @@
 package br.com.barbershopdogui.config;
 
-import io.zonky.test.db.postgres.embedded.EmbeddedPostgres;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -9,13 +8,17 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
+
 import javax.sql.DataSource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+
+import io.zonky.test.db.postgres.embedded.EmbeddedPostgres;
 
 /**
  * SOMENTE para uso local (perfil "local"): sobe um PostgreSQL real embutido na própria JVM, aplica os scripts
@@ -33,8 +36,13 @@ public class LocalDatabaseConfig {
      */
     private static final List<String> SCRIPTS = List.of(
             "schema.sql", "analytics_views.sql", "seed_demo.sql",
-            "migracoes/004_etapa4.sql", "migracoes/005_exclusao_e_supabase.sql", "migracoes/006_bi.sql", "migracoes/007_etapa4b.sql", "migracoes/008_perfis_balcao.sql",
-            "seed_demo_produtos.sql");
+            "migracoes/004_etapa4.sql",
+"migracoes/005_exclusao_e_supabase.sql",
+"migracoes/006_bi.sql",
+"migracoes/007_etapa4b.sql",
+"migracoes/008_perfis_balcao.sql",
+"migracoes/009_regras_servicos.sql",
+"seed_demo_produtos.sql");
 
     @Bean(destroyMethod = "close")
     EmbeddedPostgres embeddedPostgres() throws IOException {

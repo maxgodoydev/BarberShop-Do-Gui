@@ -108,20 +108,20 @@ Todos os dados das imagens são **fictícios** (clientes "Demonstração NNN", e
 ## Estrutura
 ```
 app/         Spring Boot (src/main/java, resources/static = front multipágina), testes JUnit
-database/    schema.sql · analytics_views.sql · seed_demo.sql · migracoes/ (004–008) · aplicar.sh · queries/ · tests/
+database/    schema.sql · analytics_views.sql · seed_demo.sql · migracoes/ (004–009) · aplicar.sh · queries/ · tests/
 analytics/   barbershop_analytics/ (pipeline) · tests/ · sample_data/ · powerbi/ (DAX, M, layout) · output/ (gerado)
 scripts/     gerar_dados_demo.py · check_project.py · verifica_banco.py · rodar-local.*
 docs/        arquitetura, modelo-de-dados, regras-de-agendamento, api, seguranca, metricas, pipeline-de-dados, powerbi, deploy, testes, limitacoes (+ documentos acadêmicos originais: PMC, entrevista, planejamento, protótipo)
 ```
 
 ## Executar localmente
-**Sem instalar banco (recomendado para testar):** Postgres embutido, perfil `local` (só JDK 21+ e Maven). Aplica schema, views, seed e migrações 004–008 sozinho; dados descartados a cada execução.
+**Sem instalar banco (recomendado para testar):** Postgres embutido, perfil `local` (só JDK 21+ e Maven). Aplica schema, views, seed e migrações 004–009 sozinho; dados descartados a cada execução.
 ```powershell
 cd app
 $env:BOOTSTRAP_OWNER_USERNAME = "gui"; $env:BOOTSTRAP_OWNER_PASSWORD = "uma-senha-com-12+"
 mvn spring-boot:run "-Dspring-boot.run.profiles=local"      # http://localhost:8080
 ```
-**Com PostgreSQL instalado** (`database/aplicar.sh` aplica, nesta ordem: `schema`, `analytics_views`, `seed_demo` (opcional), as migrações `004_etapa4`, `005_exclusao_e_supabase`, `006_bi`, `007_etapa4b` e `008_perfis_balcao` e, por último, `seed_demo_produtos` (opcional, depende da 004)):
+**Com PostgreSQL instalado** (`database/aplicar.sh` aplica, nesta ordem: `schema`, `analytics_views`, `seed_demo` (opcional), as migrações `004_etapa4`, `005_exclusao_e_supabase`, `006_bi`, `007_etapa4b`, `008_perfis_balcao` e `009_regras_servicos` e, por último, `seed_demo_produtos` (opcional, depende da 004)):
 Requisitos: JDK 21, Maven 3.9+, PostgreSQL 15+ (com `btree_gist`), Python 3.11+.
 ```bash
 createdb barbershop_gui
