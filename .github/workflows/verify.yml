@@ -21,7 +21,7 @@ jobs:
       - run: python scripts/check_project.py
       - name: Sintaxe JavaScript
         run: for f in app/src/main/resources/static/js/*.js; do node --check "$f"; done
-      - name: Banco (schema, views, seed e migrações 004-008 em PostgreSQL real)
+      - name: Banco (schema, views, seed e migrações 004-010 em PostgreSQL real)
         env: {PGHOST: localhost, PGUSER: postgres, PGPASSWORD: ci-only, PGDATABASE: barbershop_ci}
         run: |
           bash database/aplicar.sh --demo
@@ -33,6 +33,16 @@ jobs:
         run: |
           pip install -r analytics/requirements.txt
           cd analytics && python -m unittest discover -s tests -v
+      - name: Paridade BI do sistema (fn_bi_resumo) x pipeline Python
+        env: {PGHOST: localhost, PGUSER: postgres, PGPASSWORD: ci-only, PGDATABASE: barbershop_ci}
+        run: python scripts/paridade_bi.py
+      - name: Ajuste de catálogo opt-in (idempotente e sem quebrar a reaplicação das migrações)
+        env: {PGHOST: localhost, PGUSER: postgres, PGPASSWORD: ci-only, PGDATABASE: barbershop_ci}
+        run: |
+          psql -X -q -v ON_ERROR_STOP=1 -f database/ajustes/catalogo_gui.sql
+          psql -X -q -v ON_ERROR_STOP=1 -f database/ajustes/catalogo_gui.sql   # 2ª vez: sem efeito
+          bash database/aplicar.sh --demo                                         # reaplicar não pode desfazer nem estourar
+          test "$(psql -X -tA -c "SELECT count(*) FROM servicos WHERE (id=1 AND nome='Corte' AND preco=35 AND duracao_minutos=40 AND ativo) OR (id IN (2,4) AND NOT ativo) OR (id=5 AND preco=20) OR (id=6 AND preco=50)")" = "5"
       - name: Compilar e testar Java
         run: mvn --batch-mode verify
         working-directory: app

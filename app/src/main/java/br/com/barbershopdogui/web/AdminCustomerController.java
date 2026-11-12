@@ -69,28 +69,30 @@ public class AdminCustomerController {
 
     @PostMapping("/{id}/bloquear")
     public Map<String, String> block(@PathVariable long id, java.security.Principal principal) {
-        audit.log(principal.getName(), "CLIENTE_BLOQUEAR", "cliente " + id);
         int n = jdbc.update("UPDATE clientes SET bloqueado = TRUE, bloqueado_em = ?, bloqueio_motivo = 'Bloqueio manual pela equipe' "
                 + "WHERE id = ? AND excluido_em IS NULL", LocalDateTime.now(clock), id);
-        return done(n, "Cliente bloqueado.");
+        Map<String, String> response = done(n, "Cliente bloqueado.");
+        audit.log(principal.getName(), "CLIENTE_BLOQUEAR", "cliente " + id); // só depois de o bloqueio acontecer de fato
+        return response;
     }
 
     @PostMapping("/{id}/desbloquear")
     public Map<String, String> unblock(@PathVariable long id, java.security.Principal principal) {
-        audit.log(principal.getName(), "CLIENTE_DESBLOQUEAR", "cliente " + id);
         int n = jdbc.update("UPDATE clientes SET bloqueado = FALSE, bloqueado_em = NULL, bloqueio_motivo = NULL "
                 + "WHERE id = ? AND excluido_em IS NULL", id);
-        return done(n, "Cliente liberado.");
+        Map<String, String> response = done(n, "Cliente liberado.");
+        audit.log(principal.getName(), "CLIENTE_DESBLOQUEAR", "cliente " + id);
+        return response;
     }
 
     @DeleteMapping("/{id}")
     public Map<String, String> delete(@PathVariable long id, java.security.Principal principal) {
-        audit.log(principal.getName(), "CLIENTE_EXCLUIR", "cliente " + id);
         String result = access.deleteAccount(id, true);
         if (!"OK".equals(result)) {
             throw new ResponseStatusException("NAO_ENCONTRADO".equals(result) ? HttpStatus.NOT_FOUND : HttpStatus.CONFLICT,
                     CustomerAccessService.deleteMessage(result));
         }
+        audit.log(principal.getName(), "CLIENTE_EXCLUIR", "cliente " + id);
         return Map.of("mensagem", "Cadastro excluído e dados pessoais removidos.");
     }
 

@@ -1,0 +1,38 @@
+name: Pipeline de dados (agendado)
+# Executa o ETL de analytics/ toda segunda-feira e sob demanda. Sem o secret ANALYTICS_DB_URL, roda sobre o CSV de
+# demonstração (determinístico). Com o secret (usuário SOMENTE LEITURA analytics_ro, ver docs/supabase.md), lê as
+# views analíticas do PostgreSQL real. Os artefatos (kpis.json e relatório de qualidade) NÃO contêm dados pessoais.
+on:
+  schedule:
+    - cron: '0 9 * * 1'   # segunda, 09:00 UTC (06:00 em São Paulo)
+  workflow_dispatch:
+jobs:
+  etl:
+    runs-on: ubuntu-latest
+    env:
+      ANALYTICS_DB_URL: ${{ secrets.ANALYTICS_DB_URL }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - run: pip install -r analytics/requirements.txt
+      - name: Testes do pipeline
+        run: cd analytics && python -m unittest discover -s tests -v
+      - name: Executar ETL sobre o CSV de demonstração
+        if: ${{ env.ANALYTICS_DB_URL == '' }}
+        run: cd analytics && python -m barbershop_analytics --source csv --input sample_data --output output --agora 2026-10-24T12:00:00
+      - name: Executar ETL sobre o PostgreSQL (somente leitura)
+        if: ${{ env.ANALYTICS_DB_URL != '' }}
+        run: |
+          pip install "psycopg[binary]>=3.2"
+          cd analytics && python -m barbershop_analytics --source postgres --output output
+      - name: Resumo da qualidade dos dados
+        run: cat analytics/output/quality_report.md >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: analytics-output
+          path: |
+            analytics/output/kpis.json
+            analytics/output/quality_report.json
+            analytics/output/quality_report.md
+          retention-days: 30

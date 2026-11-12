@@ -73,7 +73,9 @@ INSERT INTO servicos (id, nome, descricao, preco, duracao_minutos, requer_avalia
   (4, 'Corte na máquina', 'Corte com máquina em um só comprimento.', 30.00, 20, FALSE, TRUE, TRUE, 4),
   (5, 'Barba', 'Barba com toalha quente e acabamento.', 35.00, 20, FALSE, TRUE, TRUE, 5),
   (6, 'Cabelo e barba', 'Combo de corte e barba.', 70.00, 50, FALSE, TRUE, TRUE, 6)
-ON CONFLICT (nome) DO NOTHING;
+-- Sem alvo explícito: cobre conflito de nome E de id. Com (nome), um serviço renomeado depois (ex.: id 1 virou
+-- 'Corte') faria esta migração estourar por servicos_pkey ao ser reaplicada.
+ON CONFLICT DO NOTHING;
 
 -- Combinações proibidas na mesma visita (simétricas). Combo exclui seus componentes; cortes se excluem entre si.
 CREATE TABLE IF NOT EXISTS servico_exclusoes (

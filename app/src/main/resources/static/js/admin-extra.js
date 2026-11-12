@@ -32,6 +32,33 @@
             : '<tr><td colspan="3" class="empty">Nenhum serviço concluído no período.</td></tr>') + '</tbody></table></div></article>').join('') || '<p class="empty">Sem dados no período.</p>';
       } catch (e) { toast(e.message, true); }
     }
+    /* Receita estimada por mês e por profissional (só proprietário: o servidor já omite valores para a recepção).
+       Reaproveita /resumo, uma chamada por mês, para não exigir endpoint novo. */
+    async function mensal() {
+      if (!dono) return;
+      $('#mensal-wrap').hidden = false;
+      try {
+        const base = new Date(); base.setHours(12, 0, 0, 0);
+        const meses = [];
+        for (let i = 5; i >= 0; i--) {
+          const a = new Date(base.getFullYear(), base.getMonth() - i, 1, 12), z = new Date(base.getFullYear(), base.getMonth() - i + 1, 0, 12);
+          meses.push({a, z, rotulo: String(a.getMonth() + 1).padStart(2, '0') + '/' + a.getFullYear(), parcial: i === 0});
+        }
+        const dados = await Promise.all(meses.map(m => api('/api/admin/equipe/resumo?de=' + iso(m.a) + '&ate=' + iso(m.z))));
+        const profs = new Map();
+        dados.forEach(l => l.forEach(p => { if (!profs.has(p.profissionalId)) profs.set(p.profissionalId, p.profissional); }));
+        const ids = [...profs.keys()];
+        const cell = dados.map(l => ids.map(id => { const p = l.find(x => x.profissionalId === id); return {v: p ? Number(p.valorAtendido) : 0, n: p ? Number(p.concluidos) : 0}; }));
+        const sum = arr => arr.reduce((s, c) => ({v: s.v + c.v, n: s.n + c.n}), {v: 0, n: 0});
+        const fmt = c => '<strong>' + money(c.v) + '</strong> <span class="small muted">(' + c.n + ' atend.)</span>';
+        let html = '<table><thead><tr><th>Mês</th>' + ids.map(id => '<th>' + esc(profs.get(id)) + '</th>').join('') + '<th>Total</th></tr></thead><tbody>';
+        for (let i = meses.length - 1; i >= 0; i--) { // mais recente primeiro
+          html += '<tr><td>' + meses[i].rotulo + (meses[i].parcial ? ' <span class="small muted">(em andamento)</span>' : '') + '</td>' + cell[i].map(c => '<td>' + fmt(c) + '</td>').join('') + '<td>' + fmt(sum(cell[i])) + '</td></tr>';
+        }
+        html += '<tr><td><strong>Total do período</strong></td>' + ids.map((_, j) => '<td>' + fmt(sum(cell.map(r => r[j]))) + '</td>').join('') + '<td>' + fmt(sum(cell.flat())) + '</td></tr></tbody></table>';
+        $('#mensal').innerHTML = ids.length ? html : '<p class="empty">Sem dados no período.</p>';
+      } catch (e) { toast(e.message, true); }
+    }
     $('#dia').addEventListener('change', disp);
     $('#de').addEventListener('change', resumo); $('#ate').addEventListener('change', resumo);
     $$('[data-r]').forEach(b => b.addEventListener('click', () => {
@@ -42,7 +69,7 @@
       else { a = new Date(t.getFullYear(), t.getMonth() - 1, 1, 12); z = new Date(t.getFullYear(), t.getMonth(), 0, 12); }
       $('#de').value = iso(a); $('#ate').value = iso(z); resumo();
     }));
-    await Promise.all([disp(), resumo()]);
+    await Promise.all([disp(), resumo(), mensal()]);
   };
 
   /* ---------- Estoque ---------- */

@@ -42,6 +42,7 @@ public class LocalDatabaseConfig {
 "migracoes/007_etapa4b.sql",
 "migracoes/008_perfis_balcao.sql",
 "migracoes/009_regras_servicos.sql",
+"migracoes/010_recuperacao_servicos_e_senhas.sql",
 "seed_demo_produtos.sql");
 
     @Bean(destroyMethod = "close")

@@ -139,7 +139,7 @@ public class ScheduleService {
                                     booking.inicio().toLocalDate(),
                                     motivo));
                 } catch (Exception e) {
-                    log.warn("Não foi possível enviar e-mail de cancelamento para agendamento {}: {}", booking.id(), e.getMessage());
+                    log.warn("Não foi possível enviar e-mail de cancelamento para agendamento {}: {}", booking.id(), e.getClass().getSimpleName()); // getMessage() poderia conter o e-mail do cliente
                 }
             }
         }

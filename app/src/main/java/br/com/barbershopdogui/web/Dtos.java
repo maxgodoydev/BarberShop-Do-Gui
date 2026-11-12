@@ -84,7 +84,10 @@ public final class Dtos {
 
     public record StatusInput(@NotBlank String status) { }
 
-    public record AdminUserView(Long id, String username, String nome, String papel, boolean ativo, LocalDateTime ultimoLoginEm) { }
+    public record AdminUserView(Long id, String username, String nome, String papel, boolean ativo,
+                               LocalDateTime ultimoLoginEm, boolean exigeTrocaSenha) { }
+
+    public record ResetPasswordInput(@NotBlank @Size(min = 12, max = 100, message = "A senha deve ter de 12 a 100 caracteres.") String novaSenha) { }
 
     public record AdminUserInput(@NotBlank @Size(min = 3, max = 60) String username, @NotBlank @Size(max = 100) String nome,
                                  @NotBlank @Size(min = 12, max = 100, message = "A senha deve ter de 12 a 100 caracteres.") String senhaTemporaria,

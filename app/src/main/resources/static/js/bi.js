@@ -35,9 +35,9 @@ window.renderBI = async BG => {
   }
   function hbars(items, fmt) {
     if (!items.length) return empty;
-    const W = 640, row = 30, H = items.length * row + 6, L = 170, max = Math.max(...items.map(i => i.v), 1);
+    const W = 640, row = 30, H = items.length * row + 6, L = 210, max = Math.max(...items.map(i => i.v), 1);
     let s = '<svg viewBox="0 0 ' + W + ' ' + H + '" aria-hidden="true">';
-    items.forEach((it, i) => { const w = (W - L - 90) * it.v / max, yy = i * row + 4; s += '<text x="' + (L - 8) + '" y="' + (yy + 17) + '" text-anchor="end">' + esc(cut(it.l, 24)) + '</text><rect x="' + L + '" y="' + yy + '" width="' + Math.max(w, 2) + '" height="20" rx="5" fill="' + (i === 0 ? RED : BLUE) + '"><title>' + esc(it.l + ': ' + fmt(it.v)) + '</title></rect><text x="' + (L + w + 8) + '" y="' + (yy + 15) + '">' + fmt(it.v) + '</text>'; });
+    items.forEach((it, i) => { const w = (W - L - 90) * it.v / max, yy = i * row + 4; s += '<text x="' + (L - 8) + '" y="' + (yy + 17) + '" text-anchor="end">' + esc(cut(it.l, 30)) + '</text><rect x="' + L + '" y="' + yy + '" width="' + Math.max(w, 2) + '" height="20" rx="5" fill="' + (i === 0 ? RED : BLUE) + '"><title>' + esc(it.l + ': ' + fmt(it.v)) + '</title></rect><text x="' + (L + w + 8) + '" y="' + (yy + 15) + '">' + fmt(it.v) + '</text>'; });
     return s + '</svg>';
   }
   function donut(items) { // [{l, v, c}]
@@ -57,7 +57,13 @@ window.renderBI = async BG => {
     for (let h = h0; h <= h1; h += Math.ceil(nh / 12)) s += '<text x="' + (L + (h - h0) * cw + cw / 2) + '" y="' + (H - 6) + '" text-anchor="middle">' + h + 'h</text>';
     return s + '</svg>';
   }
-  const delta = (cur, prev) => { if (!prev) return cur ? '<em class="flat">sem período anterior</em>' : '<em class="flat">sem base de comparação</em>'; const d = (cur - prev) / prev * 100; return '<em class="' + (d > 0.5 ? 'up' : d < -0.5 ? 'down' : 'flat') + '">' + (d > 0.5 ? '▲ ' : d < -0.5 ? '▼ ' : '● ') + P(Math.abs(d)) + ' vs. período anterior</em>'; };
+  const MIN_BASE = 20; // atendimentos mínimos no período anterior para exibir variação %
+  const delta = (cur, prev, prevN) => {
+    if (!prev) return cur ? '<em class="flat">sem período anterior</em>' : '<em class="flat">sem base de comparação</em>';
+    if (prevN !== undefined && prevN < MIN_BASE) return '<em class="flat">base anterior pequena (' + N(prevN) + ' atend.)</em>';
+    const d = (cur - prev) / prev * 100, extremo = Math.abs(d) > 200;
+    return '<em class="' + (d > 0.5 ? 'up' : d < -0.5 ? 'down' : 'flat') + '">' + (d > 0.5 ? '▲ ' : d < -0.5 ? '▼ ' : '● ') + P(Math.abs(d)) + ' vs. período anterior' + (extremo ? ' (confira se o período anterior está completo)' : '') + '</em>';
+  };
 
   let data;
   async function load() {
@@ -66,8 +72,8 @@ window.renderBI = async BG => {
     $('#gerado').textContent = 'Atualizado em ' + new Date(data.geradoEm).toLocaleString('pt-BR') + '.';
     $('#bi-vazio').hidden = k.pedidos > 0;
     const card = (t, v, extra) => '<div class="bi-k"><small>' + t + '</small><strong>' + v + '</strong>' + (extra || '') + '</div>';
-    $('#kpis').innerHTML = card('Receita (concluídos)', R(k.receita), delta(k.receita, k.receitaAnterior)) + card('Atendimentos', N(k.atendimentos), delta(k.atendimentos, k.atendimentosAnterior)) + card('Ticket médio', R(k.ticketMedio))
-      + card('Cancelamentos', P(k.taxaCancelamento), '<em class="flat">dos pedidos</em>') + card('Faltas', P(k.taxaFalta), '<em class="flat">dos agendados</em>') + card('Clientes novos', N(k.clientesNovos)) + card('Clientes recorrentes', P(k.clientesRecorrentesPct), '<em class="flat">2+ visitas no período</em>') + card('Produtos vendidos', R(k.receitaProdutos));
+    $('#kpis').innerHTML = card('Receita estimada (concluídos)', R(k.receita), delta(k.receita, k.receitaAnterior, k.atendimentosAnterior)) + card('Atendimentos', N(k.atendimentos), delta(k.atendimentos, k.atendimentosAnterior, k.atendimentosAnterior)) + card('Ticket médio', R(k.ticketMedio))
+      + card('Cancelamentos', P(k.taxaCancelamento), '<em class="flat">dos pedidos (sem reservas expiradas)</em>') + card('Faltas', P(k.taxaFalta), '<em class="flat">dos agendados</em>') + card('Clientes novos', N(k.clientesNovos)) + card('Clientes recorrentes', P(k.clientesRecorrentesPct), '<em class="flat">2+ visitas no período</em>') + card('Produtos vendidos', R(k.receitaProdutos));
     const dias = {}, horas = {}; data.diaSemana.forEach(d => { dias[d.dia] = d.quantidade; }); data.mapaCalor.forEach(c => { horas[c.hora] = (horas[c.hora] || 0) + c.quantidade; });
     const topD = data.diaSemana.slice().sort((a, b) => b.quantidade - a.quantidade)[0], topH = Object.entries(horas).sort((a, b) => b[1] - a[1])[0], sv = data.servicos[0], pf = data.profissionais[0];
     const tip = [];

@@ -2,6 +2,32 @@
 
 **Ambiente de geração (24/10/2026):** OpenJDK 21 (somente JRE + módulo `jdk.compiler`), Python 3.12 (pandas 3.0, numpy), Node 22, SQLite 3.45. **Sem** Maven, sem acesso à internet, **sem PostgreSQL**, sem navegador.
 
+## v13 — correções da sessão 3 (06/11/2026)
+
+**Verificado de verdade (PostgreSQL 16 + Python 3.12 + Node 22):**
+- `aplicar.sh --demo` 2x e `verifica_banco.py` (17/17) antes e depois das mudanças; reaplicação **sobre o banco já ajustado** (004 com `ON CONFLICT DO NOTHING` genérico) sem erro e sem desfazer o catálogo.
+- `database/ajustes/catalogo_gui.sql`: 2 execuções seguidas sem efeito extra; em banco sem seed com o id 1 renomeado, não toca no id 1. Sem a correção na 004, reaplicá-la depois do ajuste falhava com `servicos_pkey` (reproduzido).
+- `scripts/paridade_bi.py`: BI (`fn_bi_resumo`) e pipeline concordam (1.375 pedidos, 1.068 concluídos, 15,2% de cancelamento, distribuição por dia). Mutação (adicionar EXPIRADO a PEDIDO) é detectada e o script sai com 1.
+- ETL sobre o CSV de demonstração (mesmo comando do workflow agendado) e `python -m unittest` do pipeline (10 testes) OK; `node --check` em `bi.js`; `check_project.py` OK; YAML dos workflows válido.
+
+- **Receita estimada por mês e por profissional** (tela Equipe, só proprietário; `admin-extra.js` + `equipe.html`): o front chama `/api/admin/equipe/resumo` uma vez por mês (6 meses), sem endpoint novo. Testado em Node com API simulada: 7 chamadas para o proprietário (1 do período + 6 meses), totais por mês/profissional/geral corretos, nomes com HTML escapados; para a recepção a seção fica oculta e não dispara chamadas. No banco demo, o total por agendamento (`preco_referencia`) e por serviço (`agendamento_servicos.preco`) coincidem (R$ 37.055,00, 0 divergências).
+
+**NÃO verificado:** Java. Este ambiente não alcança o repositório Maven, então `RateLimiter` (3 métodos novos), `AuthController` e os 2 testes novos em `AuthControllerTest` **não foram compilados nem executados**. Rodar `mvn clean test` em `app` (esperado: 69 testes). O comportamento visual do BI (rótulos, variação %) não foi aberto em navegador; o workflow agendado só roda no GitHub.
+
+## v12 — segurança administrativa e migração 010 (06/11/2026)
+| Item | Resultado |
+|---|---|
+| `aplicar.sh --demo` (schema, views, seed, migrações 004–010) em PostgreSQL 16 novo, aplicado **2x** | OK, sem erro; `exige_troca_senha` criada com padrão `FALSE` |
+| Simulação de **produção** (sem seed, serviços 1–7 com preço/descrição reais, sem profissionais) + migração 010 **2x** | Serviços 1–7 **intactos** (hash idêntico antes/depois, incluindo Luzes R$ 200 e Corte tradicional R$ 45,90); serviços 8–13 criados; **0 vínculos** em `profissional_servicos`; próximo ID = 14 |
+| `scripts/verifica_banco.py` | 17/17 casos como esperado |
+| `scripts/check_project.py` | OK (a 010 consta em scripts e docs) |
+| `node --check` em `admin.js` | OK |
+| `PasswordPolicy` (compilada e executada isoladamente com `javac`/`java`) | OK: 72 bytes exatos aceitos, 73 rejeitados; `é`×37 e emoji×19 rejeitados; espaços nas pontas preservados |
+
+Testes JUnit **escritos** nesta versão (revisados por leitura; **ainda não executados com Maven**): `AdminUserServiceTest` (criação, senha inválida, papel inválido, duplicado, falha de auditoria, limite de 72 bytes, troca, redefinição, ativar/desativar, auditoria sem senha, `@Transactional`, situação da conta), `PasswordPolicyTest`, `ForcedPasswordChangeFilterTest` (troca pendente, conta desativada encerra a sessão, falha de consulta = 503), `AuthControllerTest` (limite de 5 tentativas em 15 min por usuário) e 2 casos novos em `AdminPasswordToolTest`.
+
+**Não validado:** `mvn verify` (compilação e execução dos testes acima); a CI do GitHub executa no push.
+
 ## v11 — correções da revisão (28/10/2026, PostgreSQL 16.15 em Ubuntu 24.04)
 | Item | Resultado |
 |---|---|

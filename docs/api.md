@@ -14,7 +14,7 @@ Escritas exigem cabeçalho CSRF: obtenha `GET /api/csrf` → `{headerName, token
 
 **Cliente (sessão por link):** POST `/api/cliente/sessao {token}` · GET `/api/cliente/agendamentos` · POST `/api/cliente/agendamentos/{id}/cancelar` · POST `/api/cliente/sair`.
 **Autenticação:** POST `/api/auth/login` (form `username`,`password`) · POST `/api/auth/logout` · GET `/api/auth/me` · POST `/api/auth/senha`.
-**Admin (PROPRIETARIO)**: `/api/admin/agendamentos` (GET filtros `data,profissionalId,servicoId,status`; PATCH `/{id}/status`), `/servicos` (GET/POST/PUT/PATCH ativo), `/profissionais` (+ `/{id}/horarios` GET/PUT), `/bloqueios` (GET/POST/DELETE), `/usuarios` (GET/POST técnico/PATCH ativo).
+**Admin (PROPRIETARIO)**: `/api/admin/agendamentos` (GET filtros `data,profissionalId,servicoId,status`; PATCH `/{id}/status`), `/servicos` (GET/POST/PUT/PATCH ativo), `/profissionais` (+ `/{id}/horarios` GET/PUT), `/bloqueios` (GET/POST/DELETE), `/usuarios` (GET/POST recepção ou técnico/PATCH `/{id}/ativo`/POST `/{id}/redefinir-senha`).
 **Admin (PROPRIETARIO e TECNICO):** GET `/api/admin/dashboard`, GET `/api/admin/export/agendamentos.csv`, GET `/api/admin/servicos`, GET `/api/admin/profissionais`.
 Erros: `{mensagem, erros?}` com 400/401/403/404/409/410/429/503.
 
