@@ -171,4 +171,10 @@ public class AdminController {
         users.setActive(id, in.ativo(), principal.getName());
         return Map.of("mensagem", "Usuário atualizado.");
     }
+
+    @PostMapping("/usuarios/{id}/redefinir-senha")
+    public Map<String, String> resetPassword(@PathVariable long id, @Valid @RequestBody Dtos.ResetPasswordInput in, Principal principal) {
+        users.resetUserPassword(id, in.novaSenha(), principal.getName());
+        return Map.of("mensagem", "Senha redefinida com sucesso. A troca de senha será exigida no próximo acesso.");
+    }
 }

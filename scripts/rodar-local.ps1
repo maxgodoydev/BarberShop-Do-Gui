@@ -9,7 +9,7 @@ $env:PGPASSWORD = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.In
 $db = "barbershop_gui"
 $existe = psql -h localhost -U $pgUser -d postgres -tAc "SELECT 1 FROM pg_database WHERE datname='$db'"
 if (-not $existe) { psql -h localhost -U $pgUser -d postgres -v ON_ERROR_STOP=1 -c "CREATE DATABASE $db" }
-foreach ($f in "schema.sql","analytics_views.sql","seed_demo.sql","migracoes/004_etapa4.sql","migracoes/005_exclusao_e_supabase.sql","migracoes/006_bi.sql","migracoes/007_etapa4b.sql","migracoes/008_perfis_balcao.sql","migracoes/009_regras_servicos.sql","seed_demo_produtos.sql") { psql -h localhost -U $pgUser -d $db -v ON_ERROR_STOP=1 -f "database/$f" }
+foreach ($f in "schema.sql","analytics_views.sql","seed_demo.sql","migracoes/004_etapa4.sql","migracoes/005_exclusao_e_supabase.sql","migracoes/006_bi.sql","migracoes/007_etapa4b.sql","migracoes/008_perfis_balcao.sql","migracoes/009_regras_servicos.sql","migracoes/010_recuperacao_servicos_e_senhas.sql","seed_demo_produtos.sql") { psql -h localhost -U $pgUser -d $db -v ON_ERROR_STOP=1 -f "database/$f" }
 $env:DB_URL = "jdbc:postgresql://localhost:5432/$db"; $env:DB_USERNAME = $pgUser; $env:DB_PASSWORD = $env:PGPASSWORD
 $env:BOOTSTRAP_OWNER_USERNAME = Read-Host "Crie o usuário do proprietário (ex.: gui)"
 $own = Read-Host "Senha do proprietário (12+ caracteres)" -AsSecureString

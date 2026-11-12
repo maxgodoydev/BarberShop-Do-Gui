@@ -14,6 +14,7 @@ Região **São Paulo (sa-east-1)** (menor latência). Guarde a senha do banco.
 6. `database/migracoes/007_etapa4b.sql`
 7. `database/migracoes/008_perfis_balcao.sql`
 8. `database/migracoes/009_regras_servicos.sql`
+9. `database/migracoes/010_recuperacao_servicos_e_senhas.sql`
 
 Alternativa fora do SQL Editor: com as variáveis `PG*` do pooler, `database/aplicar.sh` aplica tudo na ordem certa (sem o seed).
 

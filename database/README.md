@@ -18,6 +18,7 @@ psql -v ON_ERROR_STOP=1 -d barbershop_gui -f database/migracoes/006_bi.sql
 psql -v ON_ERROR_STOP=1 -d barbershop_gui -f database/migracoes/007_etapa4b.sql
 psql -v ON_ERROR_STOP=1 -d barbershop_gui -f database/migracoes/008_perfis_balcao.sql
 psql -v ON_ERROR_STOP=1 -d barbershop_gui -f database/migracoes/009_regras_servicos.sql
+psql -v ON_ERROR_STOP=1 -d barbershop_gui -f database/migracoes/010_recuperacao_servicos_e_senhas.sql
 
 # 4. OPCIONAL (só demo): produtos fictícios. Precisa rodar DEPOIS da 004, que cria a tabela produtos
 psql -v ON_ERROR_STOP=1 -d barbershop_gui -f database/seed_demo_produtos.sql
@@ -27,6 +28,7 @@ Você também pode rodar tudo de forma automatizada pelo script oficial:
 - `schema.sql` e `analytics_views.sql` são idempotentes (`IF NOT EXISTS` / `CREATE OR REPLACE`). `seed_demo.sql` usa `ON CONFLICT DO NOTHING`.
 - Requer a extensão `btree_gist` (permitida em Supabase, Neon, Render e na maioria dos provedores; em PostgreSQL local pode exigir o pacote `postgresql-contrib`).
 - Regenerar dados fictícios: `python3 scripts/gerar_dados_demo.py [--anchor AAAA-MM-DD]`.
+- `ajustes/catalogo_gui.sql`: ajuste de catálogo **opt-in** (fora de `aplicar.sh`; ver `docs/deploy.md`). A 004 usa `ON CONFLICT DO NOTHING` sem alvo para continuar idempotente depois que um serviço é renomeado.
 - `queries/`: consultas analíticas (ver `queries/README.md`). `tests/verifica_restricoes.sql`: roteiro manual das restrições.
 - Status: scripts **não executados em PostgreSQL real** neste ambiente (ver docs/testes.md).
 
