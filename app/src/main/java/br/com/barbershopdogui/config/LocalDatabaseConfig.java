@@ -43,6 +43,7 @@ public class LocalDatabaseConfig {
 "migracoes/008_perfis_balcao.sql",
 "migracoes/009_regras_servicos.sql",
 "migracoes/010_recuperacao_servicos_e_senhas.sql",
+"migracoes/011_lgpd_alergias.sql",
 "seed_demo_produtos.sql");
 
     @Bean(destroyMethod = "close")
